@@ -1,0 +1,58 @@
+version: '3.9'
+
+services: 
+  api:
+    container_name: api-container
+    build: 
+      context: ./api
+      dockerfile: Dockerfile
+    command: bundle exec rails s -p 3001 -b '0.0.0.0'
+    environment: 
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: test_database
+      DB_USERNAME: root
+      DB_PASSWORD: root
+    ports:
+      - "3001:3001"
+    volumes: 
+      - ./api:/app/api
+    depends_on: 
+      - db
+    networks: 
+      - app
+
+  website:
+    container_name: website-container
+    build: 
+      context: ./website
+      dockerfile: Dockerfile
+    tty: true
+    ports:
+      - "3000:3000"
+    volumes: 
+      - ./website:/app/website
+      - ./website/node_modules:/app/website/node_modules
+    depends_on: 
+      - api
+    networks: 
+      - app
+
+  db:
+    container_name: db-container
+    image: mysql:5.7
+    restart: unless-stopped
+    tty: true
+    environment: 
+      MYSQL_DATABASE: 'test_database'
+      MYSQL_USER: 'root'
+      MYSQL_PASSWORD: 'root'
+      MYSQL_ROOT_PASSWORD: 'root'
+    volumes: 
+      - .dbdata:/var/lib/mysql
+    networks: 
+      - app
+
+networks:
+  app:
+    driver: bridge

@@ -1,2 +1,5 @@
 # volume from database
 .dbdata/
+api/tmp/*
+api/log/
+api/tmp/cache/bootsnap-load-path-cache

@@ -1,0 +1,12 @@
+tmp/*
+log/*
+db/*.sqlite3
+.git
+.byebug_history
+.dockerignore
+.git
+.idea
+node_modules
+build
+npm-debug.log*
+npm-error.log*
